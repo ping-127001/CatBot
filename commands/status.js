@@ -29,7 +29,7 @@ module.exports =
                             { name: "Client Version", value: json.body.version},
                             { name: "Server Version", value: json.body.serverversion},
                             { name: "Downtime", value: json.body.downtime},
-                            { name: "Message", value: json.body.downtime},
+                            { name: "Message", value: json.body.msg},
                         )
                         .setFooter(`Nyx status recieved from ${url}`)
                         .setColor('BLACK');
