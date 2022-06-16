@@ -5,7 +5,7 @@ const config = require("../json/config.json");
 module.exports =
  {
     name: 'ping',
-    description: 'Display the bots ping',
+    description: 'Display bot latency',
     execute(message, args, client) 
     {
         try

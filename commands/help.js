@@ -10,6 +10,8 @@ const download = require('../commands/download.js');
 
 const eval = require('../commands/eval.js');
 
+const ping = require('../commands/ping.js');
+
 const status = require('../commands/status.js');
 
 module.exports =
@@ -23,6 +25,7 @@ module.exports =
             var embed = new Discord.MessageEmbed()
             .addFields
             (
+                { name: "Ping", value: ping.description},
                 { name: "Announcement", value: announcement.description},
                 { name: "Status", value: status.description},
                 { name: "Clear", value: clear.description},
