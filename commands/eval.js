@@ -14,67 +14,64 @@ module.exports =
     {
         try
         {
-            if (message.author.id == config.owner)
+            switch (message.author.id)
             {
-                
-                var msg = message.content.split(" ").slice(1).join(" ")
+                case config.owner:
+                    var msg = message.content.split(" ").slice(1).join(" ");
 
-                let evaled = eval(msg);
-
-                if (evaled === undefined)
-                {
-                    if (msg.includes("console.log"))
+                    let evaled = eval(msg);
+                    
+                    switch (evaled)
                     {
-                        var msgtmp = msg.split('"');
-
-                        var embed = new Discord.MessageEmbed()
-                        .addFields
-                        (
-                            { name: "Code", value: msg},
-                            { name: "Result", value: msgtmp[1]},
-                        )
+                        case undefined:
+                            switch (true)
+                            {
+                                case msg.includes ("console.log"):
+                                    var msgtmp = msg.split('"');
+                                
+                                    var embed = new Discord.MessageEmbed()
+                                    .addFields(
+                                    { name: "Code", value: msg},
+                                    { name: "Result", value: msgtmp[1]},)
+                                    .setColor('BLACK');
+                                    message.channel.send(embed);
+        
+                                    console.clear();
+                                    figlet('Cat Bot', function(err, data) 
+                                    {
+                                        console.log(data);
+                                    })
+                                    
+                                    return;
+    
+                                    case msg.includes ("function"):
+                                    var embed = new Discord.MessageEmbed()
+                                    .addFields(
+                                        { name: "Code", value: msg},
+                                        { name: "Message", value: "Cannot evaluate functions"},)
+                                        .setColor('BLACK');
+                                        message.channel.send(embed);
+                                        return;
+                            }
+                            return;
+                    }
+                    
+                    var embed = new Discord.MessageEmbed()
+                    .setTitle("Cat Bot Evalatuion")
+                    .addFields(
+                        { name: "Code", value: msg},
+                        { name: "Result", value: evaled},)
                         .setColor('BLACK');
                         message.channel.send(embed);
-
-                        console.clear();
-                        figlet('Cat Bot', function(err, data) 
-                        {
- 
-                          console.log(data);
-                        })
                         return;
-                    }
 
-                    if (msg.includes("function"))
-                    {
-                        var embed = new Discord.MessageEmbed()
-                        .addFields
-                        (
-                            { name: "Code", value: msg},
-                            { name: "Message", value: "Cannot evaluate functions"},
-                        )
-                        .setColor('BLACK');
-                        message.channel.send(embed);
-                        return
-                    }
-                }
-                var embed = new Discord.MessageEmbed()
-                .setTitle("Cat Bot Evalatuion")
-                .addFields
-                (
-                    { name: "Code", value: msg},
-                    { name: "Result", value: evaled},
-                )
-                .setColor('BLACK');
-                message.channel.send(embed);
-            }
-            else
-            {
-                var embed = new Discord.MessageEmbed()
-                .setTitle("Cat Bot Evalatuion")
-                .setFooter("You do not have permission to run evalauation")
-                .setColor('BLACK');
-                message.channel.send(embed);
+                default:
+                    var embed = new Discord.MessageEmbed()
+                    .setTitle("Cat Bot Evalatuion")
+                    .setFooter("You do not have permission to run evalauation")
+                    .setColor('BLACK');
+                    message.channel.send(embed);
+                    return;
             }
         }
         catch (ex)
