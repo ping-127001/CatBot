@@ -15,8 +15,7 @@ module.exports =
             {
                 if (message.author.id == config.owner)
                 {
-                    let user = message.member.displayName;
-                    let id = message.author.id;
+                    let tag = message.author.tag;
                     let sentence = message.content.split(" ");
                     sentence.shift();
                     sentence = sentence.join(" ")
@@ -26,7 +25,7 @@ module.exports =
                     var embed = new Discord.MessageEmbed()
                     .setTitle("Cat Bot Announcement")
                     .setDescription(sentence)
-                    .setFooter("This message was made by " + user + "#" + id)
+                    .setFooter("This message was made by " + tag)
                     .setColor('BLACK');
                     message.delete();
                     message.channel.send(embed);

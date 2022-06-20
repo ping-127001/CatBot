@@ -10,39 +10,40 @@ module.exports =
     {
         try
         {
-            let user = message.member.displayName;
-            let id = message.author.id
+            let tag = message.author.tag;
             let num = message.content.split(" ");
             num.shift();
             num = num.join(" ")
 
             if (message.member.hasPermission("ADMINISTRATOR"))
             {
-                if (!num)
+                switch (num)
                 {
-                    var embed = new Discord.MessageEmbed()
-                    .setTitle("Cat Bot")
-                    .setDescription("Please include a number amount of messages to delete. usage: clear {num}")
-                    .setColor('BLACK');
-                    message.channel.send(embed);
-                }
-                if (num > 100)
-                {
-                    var embed = new Discord.MessageEmbed()
-                    .setTitle("Cat Bot")
-                    .setDescription("Please include a number less than 100")
-                    .setColor('BLACK');
-                    message.channel.send(embed);
-                }
-                else
-                {
-                    message.channel.bulkDelete(num);
-                    var embed = new Discord.MessageEmbed()
-                    .setTitle("Cat Bot")
-                    .setDescription(`Deleted ${num} messages`)
-                    .setFooter(`${user}#${id}` + " deleted messages")
-                    .setColor('BLACK');
-                    message.channel.send(embed);
+                    case !num:
+                        var embed = new Discord.MessageEmbed()
+                        .setTitle("Cat Bot")
+                        .setDescription("Please include a number amount of messages to delete. usage: clear {num}")
+                        .setColor('BLACK');
+                        message.channel.send(embed);  
+                        return;
+                    
+                    case num > 100:
+                        var embed = new Discord.MessageEmbed()
+                        .setTitle("Cat Bot")
+                        .setDescription("Please include a number less than 100")
+                        .setColor('BLACK');
+                        message.channel.send(embed);
+                        return;
+
+                    default:
+                        message.channel.bulkDelete(num);
+                        var embed = new Discord.MessageEmbed()
+                        .setTitle("Cat Bot")
+                        .setDescription(`Deleted ${num} messages`)
+                        .setFooter(`${tag}` + " deleted messages")
+                        .setColor('BLACK');
+                        message.channel.send(embed);
+                        return;
                 }
             }
         }
