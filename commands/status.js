@@ -2,67 +2,71 @@ const Discord = require('discord.js')
 
 const request = require('request');
 
+const isReachable  = require('is-reachable');
+
 const config = require("../json/config.json");
 
 let options = {json: true};
 
-var url = `https://raw.githubusercontent.com/ping-127001/NyxBackend/main/backend.json`;
+var url = `http://127.0.0.1:8080/status`;
 
 module.exports =
  {
     name: 'status',
-    description: 'Get the client status',
+    description: 'Get backend status data',
     execute(message, args, client) 
     {
-        try
+        message.channel.send("https://http.cat/102");
+        (async () => 
         {
-            message.channel.send("https://http.cat/102");
-            request(url, options, (res, json) => 
+            var reachable = await isReachable(url)
+            
+            if (reachable)
             {
-                setTimeout(() => 
+                try
                 {
-                    if (json.body.msg != "N/A")
+                    request(url, options, (res, json) => 
                     {
-                        var embed = new Discord.MessageEmbed()
-                        .addFields
-                        (
-                            { name: "Client Version", value: json.body.version},
-                            { name: "Server Version", value: json.body.serverversion},
-                            { name: "Downtime", value: json.body.downtime},
-                            { name: "Message", value: json.body.msg},
-                        )
-                        .setFooter(`Nyx status recieved from ${url}`)
-                        .setColor('BLACK');
-                        message.channel.send(embed);
-                    }
-
-                    else if (json.body.msg == "N/A")
-                    {
-                        var embed = new Discord.MessageEmbed()
-                        .addFields
-                        (
-                            { name: "Client Version", value: json.body.version},
-                            { name: "Server Version", value: json.body.serverversion},
-                            { name: "Downtime", value: json.body.downtime},
-                            { name: "Message", value: "None"},
-                        )
-                        .setFooter(`Nyx status recieved from ${url}`)
-                        .setColor('BLACK');
-                        message.channel.send(embed);
-                    }
-                }, 1000);
-            })
-        }
-        catch (ex)
-        {
-            message.channel.send("https://http.cat/404");
-            var embed = new Discord.MessageEmbed()
-            .addFields
-            (
-                { name: "Error", value: ex},
-            )
-            .setColor('BLACK');
-            message.channel.send(embed);
-        }
+                        if (json.statusCode == 200)
+                        {
+                            message.channel.send("https://http.cat/200");
+                            var embed = new Discord.MessageEmbed()
+                            .addFields
+                            (
+                                { name: "API Status Code", value: '200'},
+                                { name: "Client Version", value: json.body.version},
+                                { name: "Server Version", value: json.body.serverversion},
+                                { name: "Downtime", value: json.body.downtime},
+                                { name: "Message", value: json.body.msg},
+                                )
+                                .setFooter(`Nyx status recieved from ${url}`)
+                                .setColor('BLACK');
+                                message.channel.send(embed);
+                            }
+                        })
+                }
+                catch (ex)
+                {
+                    message.channel.send("https://http.cat/404");
+                    var embed = new Discord.MessageEmbed()
+                    .addFields
+                    (
+                    { name: "Error", value: ex},
+                    )
+                    .setColor('BLACK');
+                    message.channel.send(embed);
+                }
+            }
+            if (!reachable)
+            {
+                var embed = new Discord.MessageEmbed()
+                .addFields
+                (
+                { name: "Message", value: url + ' is unreachable/or unresponsive'},
+                )
+                .setColor('BLACK');
+                message.channel.send(embed); 
+            }
+        })();
     }
 }
