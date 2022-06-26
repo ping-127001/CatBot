@@ -8,12 +8,12 @@ const config = require("../json/config.json");
 
 let options = {json: true};
 
-var url = `http://127.0.0.1:8080/status`;
+var url = `http://127.0.0.1:8080/API/status`;
 
 module.exports =
  {
     name: 'status',
-    description: 'Get backend status data',
+    description: 'Get data from the status API',
     execute(message, args, client) 
     {
         message.channel.send("https://http.cat/102");
@@ -59,6 +59,7 @@ module.exports =
             }
             if (!reachable)
             {
+                message.channel.send("https://http.cat/521");
                 var embed = new Discord.MessageEmbed()
                 .addFields
                 (
@@ -67,6 +68,7 @@ module.exports =
                 .setColor('BLACK');
                 message.channel.send(embed); 
             }
+        return;
         })();
     }
 }
