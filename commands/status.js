@@ -17,46 +17,34 @@ module.exports =
     execute(message, args, client) 
     {
         message.channel.send("https://http.cat/102");
-        (async () => 
+        try
         {
-            var reachable = await isReachable(url)
-            
-            if (reachable)
+            (async () => 
             {
-                try
+                var reachable = await isReachable(url)
+                if (reachable)
                 {
-                    request(url, options, (res, json) => 
-                    {
-                        if (json.statusCode == 200)
+                        request(url, options, (res, json) => 
                         {
-                            message.channel.send("https://http.cat/200");
-                            var embed = new Discord.MessageEmbed()
-                            .addFields
-                            (
-                                { name: "API Status Code", value: '200'},
-                                { name: "Client Version", value: json.body.version},
-                                { name: "Server Version", value: json.body.serverversion},
-                                { name: "Downtime", value: json.body.downtime},
-                                { name: "Message", value: json.body.msg},
-                                )
-                                .setFooter(`Nyx status recieved from ${url}`)
-                                .setColor('BLACK');
-                                message.channel.send(embed);
+                            if (json.statusCode == 200)
+                            {
+                                message.channel.send("https://http.cat/200");
+                                var embed = new Discord.MessageEmbed()
+                                .addFields
+                                (
+                                    { name: "API Status Code", value: '200'},
+                                    { name: "Client Version", value: json.body.version},
+                                    { name: "Server Version", value: json.body.serverversion},
+                                    { name: "Downtime", value: json.body.downtime},
+                                    { name: "Message", value: json.body.msg},
+                                    )
+                                    .setFooter(`Nyx status recieved from ${url}`)
+                                    .setColor('BLACK');
+                                    message.channel.send(embed);
                             }
                         })
-                }
-                catch (ex)
-                {
-                    message.channel.send("https://http.cat/404");
-                    var embed = new Discord.MessageEmbed()
-                    .addFields
-                    (
-                    { name: "Error", value: ex},
-                    )
-                    .setColor('BLACK');
-                    message.channel.send(embed);
-                }
             }
+    
             if (!reachable)
             {
                 message.channel.send("https://http.cat/521");
@@ -68,7 +56,17 @@ module.exports =
                 .setColor('BLACK');
                 message.channel.send(embed); 
             }
-        return;
-        })();
+            })();
+        }
+        catch (ex)
+        {
+            var embed = new Discord.MessageEmbed()
+            .addFields
+            (
+                { name: "Error", value: ex},
+            )
+            .setColor('BLACK');
+            message.channel.send(embed);
+        }
     }
 }
